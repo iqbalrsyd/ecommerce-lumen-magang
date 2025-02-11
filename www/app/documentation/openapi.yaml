@@ -1,0 +1,250 @@
+openapi: 3.0.0
+info:
+  title: 'My First API'
+  description: 'API Documentation'
+  version: 1.0.0
+paths:
+  /api/data:
+    get:
+      summary: 'Get data'
+      operationId: f7958e9da710b105742a173b3bb86150
+      responses:
+        '200':
+          description: 'Successful response'
+  /product:
+    get:
+      tags:
+        - Product
+      summary: 'Get all products'
+      description: 'Get all products.'
+      operationId: 22905e1f44768d097e237b248ae28fdc
+      responses:
+        '200':
+          description: 'Daftar semua produk'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+  '/product/{id}':
+    get:
+      tags:
+        - Product
+      summary: 'Get product by ID'
+      description: 'Get a product by ID.'
+      operationId: 25d1f844c5dbbed34761f4f3b7333485
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'ID dari produk'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Detail produk'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: 'Produk tidak ditemukan'
+  /products:
+    post:
+      tags:
+        - Product
+      summary: 'Create multiple products'
+      description: 'Create one or multiple products.'
+      operationId: 399770d33fa4672f1216707d0e236763
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                products:
+                  description: 'Array of products to create'
+                  type: array
+                  items: { properties: { name: { type: string, example: 'Product A' }, description: { type: string, example: 'Description of Product A' }, price: { type: number, format: float, example: 100.5 } }, type: object }
+              type: object
+      responses:
+        '201':
+          description: 'Products created successfully'
+          content:
+            application/json:
+              schema:
+                properties:
+                  products: { type: array, items: { $ref: '#/components/schemas/Product' } }
+                type: object
+        '422':
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string, example: 'Validation error message' }
+                type: object
+  '/products/{id}':
+    put:
+      tags:
+        - Product
+      summary: 'Update a product'
+      description: 'Update a product by ID.'
+      operationId: 1419d479f9340e30e67fe21a2ca525b7
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'ID of the product to update'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+                  example: 'Updated Product Name'
+                description:
+                  type: string
+                  example: 'Updated Product Description'
+                price:
+                  type: number
+                  format: float
+                  example: 150.75
+              type: object
+      responses:
+        '200':
+          description: 'Product updated successfully'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: 'Product not found'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string, example: 'Product not found' }
+                type: object
+    delete:
+      tags:
+        - Product
+      summary: 'Delete a product'
+      description: 'Delete a product by ID.'
+      operationId: 6e239d36b1092f33c2e4c1f10ef36f3f
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'ID of the product to delete'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Product deleted successfully'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string, example: 'Product deleted' }
+                type: object
+        '404':
+          description: 'Product not found'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string, example: 'Product not found' }
+                type: object
+  '/products/{id}/assign-category':
+    post:
+      tags:
+        - Product
+      summary: 'Assign a category to a product'
+      description: 'Assign a category to a product.'
+      operationId: ad6390a84cff2b809a445d7318be9a1d
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'ID of the product'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                category_id:
+                  description: 'ID of the category'
+                  type: integer
+                  example: 1
+              type: object
+      responses:
+        '200':
+          description: 'Category assigned successfully'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string, example: 'Category assigned to product successfully.' }
+                  product: { $ref: '#/components/schemas/Product' }
+                type: object
+        '404':
+          description: 'Product or category not found'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string, example: 'Product or category not found' }
+                type: object
+  '/categories/{categoryId}/products':
+    get:
+      tags:
+        - Category
+      summary: 'Get products by category'
+      description: 'Show products by category ID.'
+      operationId: a3b49455d780687e14f44a5208f1a225
+      parameters:
+        -
+          name: categoryId
+          in: path
+          description: 'ID of the category'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'List of products in the category'
+          content:
+            application/json:
+              schema:
+                properties:
+                  category: { properties: { id: { type: integer, example: 1 }, name: { type: string, example: Electronics } }, type: object }
+                  products: { type: array, items: { $ref: '#/components/schemas/Product' } }
+                type: object
+        '404':
+          description: 'Category not found'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string, example: 'Category not found' }
+                type: object
+tags:
+  -
+    name: Product
+    description: Product
+  -
+    name: Category
+    description: Category
