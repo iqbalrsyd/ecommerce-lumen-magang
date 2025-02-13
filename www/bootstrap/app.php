@@ -121,8 +121,6 @@ $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 |
 */
 
-class_alias(\AG\ElasticApmLaravel\Facades\ApmCollector::class, 'ApmCollector');
-
 if (!function_exists('config_path')) {
     function config_path($path = '')
     {

@@ -6,13 +6,11 @@
     "type": "project",
     "require": {
         "php": "^8.1",
-        "arkaitzgarro/elastic-apm-laravel": "^5.0",
         "doctrine/annotations": "^2.0",
         "elasticsearch/elasticsearch": "^8.17",
         "flipbox/lumen-generator": "^9.3",
         "laravel/lumen-framework": "^9.0",
         "laravel/passport": "^10.4",
-        "php-http/guzzle7-adapter": "^1.1",
         "swagger-api/swagger-ui": "^5.18",
         "zircote/swagger-php": "^5.0"
     },
