@@ -48,9 +48,9 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
-$app->singleton(App\Services\ElasticsearchService::class, function () {
-    return new App\Services\ElasticsearchService();
-});
+// $app->singleton(App\Services\ElasticsearchService::class, function () {
+//     return new App\Services\ElasticsearchService();
+// });
 
 
 /*
@@ -104,7 +104,7 @@ $app->routeMiddleware([
 */
 
 $app->register(Laravel\Passport\PassportServiceProvider::class);
-$app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
+// $app->register(\LumenGenerator\LumenGeneratorServiceProvider::class);
 // $app->singleton(App\Console\Commands\SwaggerCommand::class);
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
