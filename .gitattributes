@@ -1,0 +1,2 @@
+*.your-file-extension filter=lfs diff=lfs merge=lfs -text
+www/elastic-agent-8.17.1-linux-x86_64/data/elastic-agent-b46c28/elastic-agent filter=lfs diff=lfs merge=lfs -text
