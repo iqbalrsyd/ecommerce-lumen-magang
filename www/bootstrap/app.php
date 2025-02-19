@@ -89,7 +89,8 @@ $app->configure('elastic-apm');
 
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\AuthMiddleware::class,
-    App\Http\Middleware\LogApiMidlleware::class
+    App\Http\Middleware\LogApiMidlleware::class,
+    App\Http\Middleware\LogHttpRequest::class
 ]);
 
 /*

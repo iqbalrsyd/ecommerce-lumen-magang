@@ -1,28 +1,35 @@
-# Gunakan image PHP dengan FPM
-FROM php:8.1-fpm
+# Menggunakan PHP 8.1 CLI
+FROM php:8.2-cli
 
-# Install ekstensi tambahan yang diperlukan oleh Laravel/Lumen
+# Install ekstensi yang diperlukan
 RUN apt-get update && apt-get install -y \
-    libonig-dev unzip wget curl git zip libpng-dev libjpeg-dev libfreetype6-dev \
-    && docker-php-ext-install mbstring pdo pdo_mysql gd \
+    unzip curl git zip \
+    && docker-php-ext-install pdo pdo_mysql \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Composer dari image resmi untuk efisiensi
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer 
+# Install Composer dari image resmi
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set direktori kerja ke dalam container
+# Set working directory
 WORKDIR /var/www
 
-# Copy semua file dari host ke dalam container
-COPY . .
+# Copy hanya file composer terlebih dahulu untuk caching
+COPY www/composer.json www/composer.lock /var/www/
 
-# Pastikan folder storage dan cache ada sebelum mengatur izin
-RUN mkdir -p storage bootstrap/cache \
-    && chmod -R 775 storage bootstrap/cache \
-    && chown -R www-data:www-data storage bootstrap/cache
+# Install dependensi dengan Composer (tanpa development dependencies)
+RUN composer install --no-dev --optimize-autoloader
 
-# Expose port yang digunakan oleh Nginx/PHP-FPM
+# Copy seluruh proyek setelah dependensi di-install
+COPY www /var/www/
+
+# Konfigurasi izin folder storage & cache untuk Lumen
+RUN mkdir -p /var/www/storage /var/www/bootstrap/cache \
+    && chmod -R 775 /var/www/storage /var/www/bootstrap/cache \
+    && chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+
+
+# Expose port untuk menjalankan PHP CLI
 EXPOSE 9000
 
-# Jalankan PHP-FPM sebagai default command
-CMD ["php-fpm"]
+# Perintah default untuk menjalankan Lumen dengan PHP CLI
+CMD ["php", "-S", "0.0.0.0:9000", "-t", "public"]
